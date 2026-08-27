@@ -2,10 +2,15 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useLang } from '../i18n/LanguageContext'
 import { HOUSE_META } from '../i18n/translations'
 import { CHARACTER_META, CHARACTER_HOUSE_ORDER } from '../i18n/characters'
+import { PORTRAITS } from '../portraits'
 import './Characters.css'
 
 // House id -> its visual identity, so a card can pick up its house colours
 const HOUSE_BY_ID = Object.fromEntries(HOUSE_META.map(h => [h.id, h]))
+
+// A file dropped into src/assets/characters/ wins; an explicit `image` on the
+// roster entry is the fallback for anything kept in public/.
+const photoFor = (meta) => PORTRAITS[meta.id] ?? meta.image
 
 // "Jon Snow" -> "JS".  Works for Cyrillic too, so RU gets "ДС".
 const initialsOf = (name) =>
@@ -70,7 +75,7 @@ const CharacterCard = ({ meta, copy, house, index, onOpen }) => {
       style={{ '--accent': house.accent, '--border': house.borderColor }}
       onClick={() => onOpen(meta.id)}
     >
-      <Portrait src={meta.image} name={copy.name} house={house} />
+      <Portrait src={photoFor(meta)} name={copy.name} house={house} />
       <span className="ch-card-name">{copy.name}</span>
       <span className="ch-card-title">{copy.title}</span>
       <span className="ch-card-glow" aria-hidden="true" />
@@ -121,7 +126,7 @@ const CharacterDetail = ({ meta, copy, house, houseName, section, onClose }) => 
         <span className="corner corner-br" />
 
         <div className="ch-detail-left">
-          <Portrait src={meta.image} name={copy.name} house={house} large />
+          <Portrait src={photoFor(meta)} name={copy.name} house={house} large />
         </div>
 
         <div className="ch-detail-right">
