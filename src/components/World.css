@@ -1,0 +1,241 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;500;600;700&family=IM+Fell+English:ital@0;1&display=swap');
+
+.world {
+  position: relative;
+  background: #07080c;
+  padding: 130px 48px 150px;
+  overflow: hidden;
+}
+
+.world-texture {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 240px;
+}
+
+/* ── Header ── */
+.world-header {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  max-width: 760px;
+  margin: 0 auto 78px;
+}
+
+.world-eyebrow {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--gold, #c9a84c);
+  margin-bottom: 20px;
+}
+
+.world-title {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(32px, 4.8vw, 62px);
+  line-height: 1.1;
+  font-weight: 700;
+  color: var(--parchment, #f5e6c8);
+  margin: 20px 0 18px;
+}
+
+.world-title em { font-style: italic; color: var(--gold, #c9a84c); }
+
+.world-subtitle {
+  font-family: 'IM Fell English', Georgia, serif;
+  font-size: 16px;
+  line-height: 1.75;
+  color: var(--ash, #c8bfb0);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* ── Layout ── */
+.world-body {
+  position: relative;
+  z-index: 1;
+  max-width: 1160px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(260px, 380px) 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+/* ── Map ── */
+.world-map-wrap { position: relative; }
+
+.world-map {
+  /* The continent is far taller than it is wide, so it is bounded by height
+     rather than width — left to fill the column it would run past the panel
+     beside it and stretch the whole section. */
+  max-height: 620px;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  overflow: visible;
+}
+
+.world-sea {
+  fill: none;
+  stroke: rgba(201, 168, 76, 0.22);
+  stroke-width: 10;
+}
+
+.world-land {
+  stroke: rgba(201, 168, 76, 0.55);
+  stroke-width: 1.4;
+}
+
+.world-wall {
+  stroke: rgba(190, 220, 240, 0.5);
+  stroke-width: 2;
+  stroke-dasharray: 7 5;
+}
+
+.world-wall-label {
+  fill: rgba(190, 220, 240, 0.7);
+  font-size: 13px;
+}
+
+/* ── Pins ── */
+.world-pin { cursor: pointer; outline: none; }
+
+.world-pin-halo {
+  fill: var(--accent, #c9a84c);
+  opacity: 0;
+  transition: opacity 0.35s;
+}
+
+.world-pin-dot {
+  fill: var(--accent, #c9a84c);
+  opacity: 0.55;
+  transition: opacity 0.3s, r 0.3s;
+}
+
+.world-pin-label {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  fill: #8d8471;
+  pointer-events: none;
+  transition: fill 0.3s;
+  paint-order: stroke;
+  stroke: rgba(0, 0, 0, 0.85);
+  stroke-width: 3px;
+}
+
+.world-pin:hover .world-pin-dot,
+.world-pin.on .world-pin-dot { opacity: 1; }
+
+.world-pin:hover .world-pin-halo,
+.world-pin.on .world-pin-halo { opacity: 0.16; }
+
+.world-pin:hover .world-pin-label,
+.world-pin.on .world-pin-label,
+.world-pin:focus-visible .world-pin-label { fill: var(--accent, #c9a84c); }
+
+.world-hint {
+  text-align: center;
+  margin-top: 18px;
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: #6b5f4a;
+}
+
+/* ── Detail panel ── */
+.world-detail {
+  position: relative;
+  padding: 44px 46px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 2px;
+  background: linear-gradient(150deg, rgba(255,255,255,0.035), rgba(0,0,0,0.3));
+  min-height: 380px;
+}
+
+.world-region-name {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(26px, 3.2vw, 42px);
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--accent, #c9a84c);
+}
+
+.world-region-summary {
+  font-family: 'IM Fell English', Georgia, serif;
+  font-style: italic;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--parchment, #f5e6c8);
+  margin-top: 12px;
+}
+
+.world-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 24px 0;
+  max-width: 190px;
+}
+
+.world-divider-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, var(--accent, #c9a84c), transparent);
+  opacity: 0.5;
+}
+
+.world-divider-diamond {
+  width: 5px;
+  height: 5px;
+  flex: none;
+  background: var(--accent, #c9a84c);
+  transform: rotate(45deg);
+}
+
+.world-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 34px;
+  margin-bottom: 24px;
+}
+
+.world-facts dt {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #6f6553;
+  margin-bottom: 6px;
+}
+
+.world-facts dd {
+  font-family: 'Cinzel', serif;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  color: var(--ash, #c8bfb0);
+}
+
+.world-region-body {
+  font-family: 'IM Fell English', Georgia, serif;
+  font-size: 15.5px;
+  line-height: 1.85;
+  color: #bdb4a5;
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .world { padding: 96px 22px 110px; }
+  .world-body { grid-template-columns: 1fr; gap: 40px; }
+  .world-map-wrap { max-width: 380px; margin: 0 auto; }
+  .world-detail { padding: 34px 26px; min-height: 0; }
+  .world-pin-label { font-size: 13px; }
+}

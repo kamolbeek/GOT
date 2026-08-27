@@ -291,10 +291,10 @@ const Hero = () => {
 
   // ─── Render ───────────────────────────────────────────────────────────────
   const navItems = [
-    { label: t.nav.world,      href: '#0' },
+    { label: t.nav.world,      href: '#world' },
     { label: t.nav.characters, href: '#characters' },
     { label: t.nav.houses,     href: '#houses' },
-    { label: t.nav.history,    href: '#0' },
+    { label: t.nav.history,    href: '#history' },
   ]
 
   return (
@@ -376,8 +376,8 @@ const Hero = () => {
             <h1 ref={titleRef} className="got-title" />
             <p ref={bodyRef} className="got-body" />
             <div className="got-cta-row">
-              <button className="got-cta-btn">{t.cta.primary}</button>
-              <button className="got-cta-ghost">{t.cta.ghost}</button>
+              <a className="got-cta-btn" href="#world">{t.cta.primary}</a>
+              <a className="got-cta-ghost" href="#houses">{t.cta.ghost}</a>
             </div>
           </div>
 

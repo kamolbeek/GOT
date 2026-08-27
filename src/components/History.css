@@ -1,0 +1,342 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;500;600;700&family=IM+Fell+English:ital@0;1&display=swap');
+
+.history {
+  position: relative;
+  background: #05060a;
+  padding: 130px 48px 150px;
+  overflow: hidden;
+}
+
+.hist-texture {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.68' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 250px;
+}
+
+.history > *:not(.hist-texture) { position: relative; z-index: 1; }
+
+/* ── Reveal ── */
+.rise {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.9s cubic-bezier(0.22,1,0.36,1),
+              transform 0.9s cubic-bezier(0.22,1,0.36,1);
+}
+.rise.visible { opacity: 1; transform: translateY(0); }
+
+/* ── Header ── */
+.history-header { text-align: center; max-width: 780px; margin: 0 auto 70px; }
+
+.hist-eyebrow {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--gold, #c9a84c);
+  margin-bottom: 20px;
+}
+
+.history-title {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(30px, 4.6vw, 60px);
+  line-height: 1.1;
+  font-weight: 700;
+  color: var(--parchment, #f5e6c8);
+  margin: 20px 0 18px;
+}
+.history-title em { font-style: italic; color: var(--gold, #c9a84c); }
+
+.history-subtitle {
+  font-family: 'IM Fell English', Georgia, serif;
+  font-size: 16.5px;
+  line-height: 1.8;
+  color: var(--ash, #c8bfb0);
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+/* ── Stats ── */
+.hist-stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 54px;
+  max-width: 1000px;
+  margin: 0 auto 96px;
+  padding: 34px 0;
+  border-top: 1px solid rgba(201, 168, 76, 0.16);
+  border-bottom: 1px solid rgba(201, 168, 76, 0.16);
+}
+
+.hist-stat { text-align: center; }
+
+.hist-stat-value {
+  display: block;
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(24px, 3vw, 38px);
+  font-weight: 700;
+  color: var(--gold, #c9a84c);
+  line-height: 1.1;
+}
+
+.hist-stat-label {
+  display: block;
+  margin-top: 8px;
+  font-family: 'Cinzel', serif;
+  font-size: 9.5px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: #6f6553;
+}
+
+/* ── Prose ── */
+.hist-blocks {
+  max-width: 760px;
+  margin: 0 auto 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 74px;
+}
+
+.hist-kicker {
+  font-family: 'Cinzel', serif;
+  font-size: 9.5px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--gold-dim, #7a6130);
+  margin-bottom: 14px;
+}
+
+.hist-block-title {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(20px, 2.4vw, 28px);
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--parchment, #f5e6c8);
+  margin-bottom: 22px;
+}
+
+.hist-p {
+  font-family: 'IM Fell English', Georgia, serif;
+  font-size: 16px;
+  line-height: 1.9;
+  color: #bdb4a5;
+  margin-bottom: 16px;
+}
+.hist-p:last-child { margin-bottom: 0; }
+
+/* ── Shared subheading ── */
+.hist-sub {
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold, #c9a84c);
+  margin-bottom: 28px;
+}
+
+/* ── Seasons ── */
+.hist-seasons { max-width: 860px; margin: 0 auto 100px; }
+
+.hist-timeline {
+  list-style: none;
+  border-left: 1px solid rgba(201, 168, 76, 0.2);
+  padding-left: 0;
+}
+
+.hist-season {
+  display: flex;
+  gap: 22px;
+  padding: 18px 0 18px 28px;
+  position: relative;
+}
+
+.hist-season::before {
+  content: '';
+  position: absolute;
+  left: -4px;
+  top: 27px;
+  width: 7px;
+  height: 7px;
+  background: var(--gold-dim, #7a6130);
+  transform: rotate(45deg);
+}
+
+.hist-season-n {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--gold-dim, #7a6130);
+  flex: none;
+  min-width: 42px;
+}
+
+.hist-season-body { flex: 1; }
+
+.hist-season-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 6px;
+}
+
+.hist-season-title {
+  font-family: 'Cinzel', serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--parchment, #f5e6c8);
+}
+
+.hist-season-year {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: #6f6553;
+  flex: none;
+}
+
+.hist-season-note {
+  font-family: 'IM Fell English', Georgia, serif;
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: #9e968a;
+}
+
+/* ── Reference cards ── */
+.hist-aside {
+  max-width: 1160px;
+  margin: 0 auto 96px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+}
+
+.hist-card {
+  padding: 34px 32px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 2px;
+  background: linear-gradient(150deg, rgba(255,255,255,0.03), rgba(0,0,0,0.28));
+}
+
+.hist-list { list-style: none; }
+
+.hist-list li {
+  padding: 11px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.hist-list li:last-child { border-bottom: none; }
+
+.hist-list-year {
+  display: block;
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #675e4c;
+  margin-bottom: 5px;
+}
+
+.hist-list-main {
+  display: block;
+  font-family: 'Cinzel', serif;
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--ash, #c8bfb0);
+}
+
+.hist-list-note {
+  display: block;
+  margin-top: 4px;
+  font-family: 'IM Fell English', Georgia, serif;
+  font-style: italic;
+  font-size: 12.5px;
+  color: #6f6759;
+}
+
+/* ── Ratings ── */
+.hist-ratings { list-style: none; }
+
+.hist-ratings li {
+  padding: 13px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.hist-ratings li:last-child { border-bottom: none; }
+
+.hist-rating-score {
+  display: block;
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--gold, #c9a84c);
+  line-height: 1.15;
+}
+
+.hist-rating-source {
+  display: block;
+  margin-top: 3px;
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ash, #c8bfb0);
+}
+
+/* ── Related ── */
+.hist-related { max-width: 1000px; margin: 0 auto; }
+
+.hist-related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 26px;
+}
+
+.hist-related-card {
+  position: relative;
+  padding: 34px 32px;
+  border: 1px solid rgba(201, 168, 76, 0.18);
+  border-radius: 2px;
+  background: linear-gradient(150deg, rgba(201,168,76,0.05), rgba(0,0,0,0.3));
+  --accent: #c9a84c;
+}
+
+.hist-related-years {
+  font-family: 'Cinzel', serif;
+  font-size: 9.5px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--gold-dim, #7a6130);
+  margin-bottom: 10px;
+}
+
+.hist-related-name {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--parchment, #f5e6c8);
+  margin-bottom: 14px;
+}
+
+.hist-related-note {
+  font-family: 'IM Fell English', Georgia, serif;
+  font-size: 15px;
+  line-height: 1.8;
+  color: #a9a094;
+}
+
+/* ── Responsive ── */
+@media (max-width: 860px) {
+  .history { padding: 96px 22px 110px; }
+  .hist-stats { gap: 32px; }
+  .hist-blocks { gap: 56px; }
+  .hist-season { flex-direction: column; gap: 8px; padding-left: 22px; }
+  .hist-season-head { flex-direction: column; gap: 2px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise { opacity: 1; transform: none; transition: none; }
+}

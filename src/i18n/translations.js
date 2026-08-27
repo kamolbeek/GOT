@@ -1,4 +1,6 @@
 import { characterCopy } from './characters'
+import { worldCopy } from './world'
+import { historyCopy } from './history'
 
 // ─── Available languages ─────────────────────────────────────────────────────
 export const LANGS = [
@@ -428,4 +430,6 @@ export const translations = {
 // keep reading everything through one `t` object: t.characters.people[id]
 for (const lang of Object.keys(translations)) {
   translations[lang].characters = characterCopy[lang]
+  translations[lang].world = worldCopy[lang]
+  translations[lang].history = historyCopy[lang]
 }

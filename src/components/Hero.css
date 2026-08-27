@@ -478,6 +478,14 @@ body {
   .got-corner         { display: none; }
   .got-title          { font-size: 28px; }
 }
+/* The two hero actions are links now, not buttons — they jump to a section.
+   Anchors bring their own colour and underline, so both are reset here. */
+.got-cta-btn,
+.got-cta-ghost {
+  text-decoration: none;
+  display: inline-block;
+}
+
 /* ── Legibility over the footage ──────────────────────────────────────────
    These run 8–13px with wide tracking, straight over a moving, brightly lit
    picture, and carry no shadow of their own — so wherever the frame goes pale
