@@ -78,6 +78,21 @@ fayllarni ro'yxatga oladi.
 Tavsiya: kvadrat (1:1), ~600x600, yuz yuqori qismda. Rasm doira ichiga
 kesiladi, xonadon gerbi esa uning orqasida halqa bo'lib turadi.
 
+### Rasmlarni avtomatik tayyorlash
+
+Internetdan yuklab olingan rasmlar odatda 2:3 vertikal bo'ladi va nomlari
+tartibsiz. Skript ularni o'zi kesadi va nomlaydi:
+
+```bash
+pip install Pillow
+python3 scripts/prepare-portraits.py ~/Downloads/got --dry-run   # avval tekshirib ko'ring
+python3 scripts/prepare-portraits.py ~/Downloads/got             # keyin haqiqiy ishga tushiring
+```
+
+Fayl nomida qahramon ismi, laqabi yoki **aktyor ismi** bo'lsa yetarli —
+`Kit Harington.jpg`, `Ned Stark - Sean Bean.jpg`, `emilia-clarke.png`
+hammasi to'g'ri joyga tushadi. Skript oxirida kim rasmsiz qolganini aytadi.
+
 ### Fayl nomlari
 
 **Stark** — `eddard.jpg`, `catelyn.jpg`, `robb.jpg`, `sansa.jpg`, `arya.jpg`, `bran.jpg`, `jon.jpg`
