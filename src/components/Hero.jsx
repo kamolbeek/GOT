@@ -213,7 +213,7 @@ const Hero = () => {
         progressRef.current.style.transform = `scaleX(${p})`
       }
       if (vignetteRef.current) {
-        vignetteRef.current.style.opacity = String(0.55 + Math.sin(p * Math.PI) * 0.2)
+        vignetteRef.current.style.opacity = String(0.4 + Math.sin(p * Math.PI) * 0.14)
       }
 
       let idx = CHAPTER_META.findIndex(c => p >= c.progress[0] && p < c.progress[1])
