@@ -1,0 +1,91 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Loaded AFTER the component stylesheets, so everything here wins.
+   Two jobs: (1) make Cyrillic look right, (2) keep the scroll on the GPU.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Cinzel / Cinzel Decorative / IM Fell English have no Cyrillic glyphs —
+   Russian would fall back to an ugly system serif. These two do have it. */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+/* ── Cyrillic typography ─────────────────────────────────────────────────── */
+html[lang='ru'] .got-title,
+html[lang='ru'] .got-nav-logo,
+html[lang='ru'] .got-loading-logo,
+html[lang='ru'] .section1-title,
+html[lang='ru'] .house-name,
+html[lang='ru'] .hover-name {
+  font-family: 'Playfair Display', Georgia, serif;
+  letter-spacing: 0.01em;
+}
+
+html[lang='ru'] .got-subtitle,
+html[lang='ru'] .got-body,
+html[lang='ru'] .house-region,
+html[lang='ru'] .house-seat,
+html[lang='ru'] .house-sigil-label,
+html[lang='ru'] .hover-words,
+html[lang='ru'] .hover-desc,
+html[lang='ru'] .section1-eyebrow,
+html[lang='ru'] .section1-subtitle,
+html[lang='ru'] .got-cta-btn,
+html[lang='ru'] .got-cta-ghost,
+html[lang='ru'] .got-nav-links li a,
+html[lang='ru'] .got-scroll-hint span {
+  font-family: 'PT Serif', Georgia, serif;
+}
+
+/* Cyrillic runs longer than Latin — loosen tracking so nothing clips */
+html[lang='ru'] .got-subtitle { letter-spacing: 0.26em; }
+html[lang='ru'] .section1-eyebrow { letter-spacing: 0.28em; }
+html[lang='ru'] .house-sigil-label { letter-spacing: 0.14em; }
+
+/* Uzbek titles are long too — let them breathe */
+html[lang='uz'] .got-title { font-size: clamp(28px, 4.4vw, 60px); }
+html[lang='uz'] .house-sigil-label { letter-spacing: 0.12em; }
+
+/* ── Performance: promote the animated layers ────────────────────────────── */
+.got-video {
+  will-change: auto;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.got-vignette,
+.got-overlay {
+  will-change: opacity;
+  transform: translateZ(0);
+}
+
+.got-sticky {
+  /* isolates repaints of the pinned layer from the rest of the page */
+  contain: paint;
+}
+
+/* The progress bar is driven by transform, not width — width animation
+   forces a layout pass on every single frame. */
+.got-progress-bar-fill {
+  width: 100% !important;
+  transform: scaleX(0);
+  transform-origin: left center;
+  will-change: transform;
+}
+
+/* Grain is a full-screen repeating texture; keep it off the main thread */
+.got-grain {
+  transform: translateZ(0);
+}
+
+/* ── Nav must not collide with the fixed language switcher ───────────────── */
+.got-nav {
+  padding-right: 200px;
+}
+
+@media (max-width: 900px) {
+  .got-nav { padding-right: 120px; }
+  .got-nav-links { display: none; }
+}
+
+/* ── Respect users who asked for less motion ─────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .got-grain { display: none; }
+}
