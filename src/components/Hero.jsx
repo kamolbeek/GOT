@@ -14,11 +14,13 @@ const VIDEO_FPS = 24
 // 0 = frozen, 1 = instant. Lower = smoother but laggier behind the scroll.
 const EASE = 0.14
 
-// Scroll window for the title card. It lands inside the winterfell chapter
-// (0.12–0.30), where the book gives way to the mountains.
-const TITLE_IN   = 0.14
-const TITLE_PEAK = 0.22
-const TITLE_OUT  = 0.31
+// Scroll window for the title card. The book gives way to the mountains
+// between 9s and 12s of the hero footage, i.e. 0.24–0.32 of the runway; the
+// card is timed to land across that handover.
+const TITLE_IN  = 0.22
+const TITLE_OUT = 0.35
+// Fraction of the window spent fading in / out; the rest holds at full.
+const TITLE_FADE = 0.26
 
 const Hero = () => {
   const { t } = useLang()
@@ -35,7 +37,8 @@ const Hero = () => {
   const vignetteRef     = useRef(null)
   const chapterLabelRef = useRef(null)
   const runeBarRef      = useRef(null)
-  const titleCardRef    = useRef(null)
+  const titleVidRef     = useRef(null)
+  const contentRef      = useRef(null)
 
   // Live scroll progress (0…1) — written by ScrollTrigger, read by the rAF loop.
   // A ref, not state: this must never trigger a React re-render.
@@ -203,6 +206,13 @@ const Hero = () => {
     const onSeeked = () => { inFlight = false }
     video.addEventListener('seeked', onSeeked)
 
+    // The title clip is scrubbed the same way, and needs its own in-flight
+    // guard — two videos sharing one would deadlock each other's seeks.
+    const titleVid = titleVidRef.current
+    let titleInFlight = false
+    const onTitleSeeked = () => { titleInFlight = false }
+    titleVid?.addEventListener('seeked', onTitleSeeked)
+
     const tick = () => {
       const p = progress.current
       const target = p * duration
@@ -223,19 +233,32 @@ const Hero = () => {
         vignetteRef.current.style.opacity = String(0.4 + Math.sin(p * Math.PI) * 0.14)
       }
 
-      // Title card: rises in, holds, falls away — a single beat at the handover
-      if (titleCardRef.current) {
+      // Title card: fades in over the handover, holds, fades out
+      if (titleVid) {
+        const w = (p - TITLE_IN) / (TITLE_OUT - TITLE_IN)
         let a = 0
-        if (p > TITLE_IN && p < TITLE_OUT) {
-          a = p <= TITLE_PEAK
-            ? (p - TITLE_IN) / (TITLE_PEAK - TITLE_IN)
-            : 1 - (p - TITLE_PEAK) / (TITLE_OUT - TITLE_PEAK)
+        if (w > 0 && w < 1) {
+          a = w < TITLE_FADE ? w / TITLE_FADE
+            : w > 1 - TITLE_FADE ? (1 - w) / TITLE_FADE
+            : 1
         }
         a = a < 0 ? 0 : a > 1 ? 1 : a
-        const e = a * a * (3 - 2 * a)          // smoothstep
-        titleCardRef.current.style.opacity = String(e)
-        titleCardRef.current.style.transform =
-          `translate(-50%, -50%) scale(${(1.16 - 0.16 * e).toFixed(4)})`
+        const eased = a * a * (3 - 2 * a)                       // smoothstep
+        titleVid.style.opacity = String(eased)
+
+        // Step the chapter copy aside so the card reads as one clean frame
+        if (contentRef.current) {
+          contentRef.current.style.opacity = String(1 - eased * 0.92)
+        }
+
+        // Only seek while it is on screen; the clip plays through as you scroll
+        if (a > 0 && titleVid.duration) {
+          const want = Math.min(Math.max(w, 0), 1) * titleVid.duration
+          if (!titleInFlight && Math.abs(titleVid.currentTime - want) > 0.04) {
+            titleInFlight = true
+            titleVid.currentTime = want
+          }
+        }
       }
 
       let idx = CHAPTER_META.findIndex(c => p >= c.progress[0] && p < c.progress[1])
@@ -258,6 +281,7 @@ const Hero = () => {
       cancelAnimationFrame(raf)
       clearTimeout(refreshTimer)
       video.removeEventListener('seeked', onSeeked)
+      titleVid?.removeEventListener('seeked', onTitleSeeked)
       ctx.revert()
     }
   }, [videoReady, paintChapter])
@@ -299,17 +323,19 @@ const Hero = () => {
 
           <div ref={vignetteRef} className="got-vignette" />
           <div ref={overlayRef}  className="got-overlay" />
+          <video
+            ref={titleVidRef}
+            className="got-title-video"
+            src="/video/title.mp4"
+            playsInline
+            muted
+            preload="auto"
+            disablePictureInPicture
+            aria-hidden="true"
+          />
+
           <div className="got-grain" />
 
-          <div ref={titleCardRef} className="got-title-card" aria-hidden="true">
-            <span className="got-title-bloom" />
-            <span className="got-title-ring" />
-            <span className="got-title-bar">
-              <span className="got-title-text">{t.brand}</span>
-            </span>
-            <span className="got-title-rule got-title-rule-l" />
-            <span className="got-title-rule got-title-rule-r" />
-          </div>
 
           {['tl', 'tr', 'bl', 'br'].map(pos => (
             <div key={pos} className={`got-corner got-corner-${pos}`}>
@@ -336,7 +362,7 @@ const Hero = () => {
             ))}
           </div>
 
-          <div className="got-content">
+          <div ref={contentRef} className="got-content">
             <span ref={sigilRef} className="got-sigil" />
             <div className="got-divider">
               <div className="got-divider-line" />

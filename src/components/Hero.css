@@ -478,99 +478,17 @@ body {
   .got-corner         { display: none; }
   .got-title          { font-size: 28px; }
 }
-/* ═══════════════════════════════════════════════════════════════════════════
-   Title card — one beat at the handover from the book to the mountains.
-   Driven from the rAF loop in Hero.jsx (opacity + transform only), so it
-   costs nothing on the main thread.
-   ═══════════════════════════════════════════════════════════════════════════ */
-.got-title-card {
+/* ── Title card clip — the real thing, cut from the opening sequence ─────── */
+.got-title-video {
   position: absolute;
-  /* Sits in the clear upper half, well above the chapter block bottom-left */
-  top: 38%;
-  left: 50%;
-  z-index: 8;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: 6;              /* over the footage, under the chapter copy and nav */
   pointer-events: none;
   opacity: 0;
-  transform: translate(-50%, -50%) scale(1.16);
-  width: min(880px, 84vw);
-  display: grid;
-  place-items: center;
-}
-
-/* Warm bloom behind the bar, as if lit from within */
-.got-title-bloom {
-  position: absolute;
-  width: 120%;
-  height: 320px;
-  background:
-    radial-gradient(ellipse at center, rgba(255, 214, 130, 0.34) 0%, rgba(201, 168, 76, 0.12) 38%, transparent 70%);
-  filter: blur(6px);
-}
-
-/* Faint forged ring, echoing the sigil discs on the cards */
-.got-title-ring {
-  position: absolute;
-  width: 260px;
-  height: 260px;
-  border: 1px solid rgba(201, 168, 76, 0.35);
-  border-radius: 50%;
-  box-shadow:
-    inset 0 0 40px rgba(201, 168, 76, 0.18),
-    0 0 30px rgba(201, 168, 76, 0.12);
-}
-
-.got-title-ring::before {
-  content: '';
-  position: absolute;
-  inset: 26px;
-  border: 1px solid rgba(201, 168, 76, 0.22);
-  border-radius: 50%;
-}
-
-/* The dark banded plate the lettering sits on */
-.got-title-bar {
-  position: relative;
-  padding: 26px 54px;
-  background:
-    linear-gradient(180deg, rgba(10, 7, 5, 0.14) 0%, rgba(10, 7, 5, 0.86) 22%,
-                            rgba(10, 7, 5, 0.9) 78%, rgba(10, 7, 5, 0.14) 100%);
-  border-top: 1px solid rgba(201, 168, 76, 0.45);
-  border-bottom: 1px solid rgba(201, 168, 76, 0.45);
-  width: 100%;
-  text-align: center;
-}
-
-.got-title-text {
-  font-family: 'Cinzel Decorative', serif;
-  font-weight: 700;
-  font-size: clamp(26px, 4.6vw, 62px);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #f7ead0;
-  white-space: nowrap;
-  text-shadow:
-    0 0 18px rgba(255, 208, 120, 0.55),
-    0 0 46px rgba(201, 168, 76, 0.4),
-    0 2px 2px rgba(0, 0, 0, 0.8);
-}
-
-/* Hairlines running off each edge of the plate */
-.got-title-rule {
-  position: absolute;
-  top: 50%;
-  width: 24%;
-  height: 1px;
-  background: linear-gradient(to right, transparent, rgba(201, 168, 76, 0.6));
-}
-
-.got-title-rule-l { left: -26%; }
-.got-title-rule-r {
-  right: -26%;
-  background: linear-gradient(to left, transparent, rgba(201, 168, 76, 0.6));
-}
-
-@media (max-width: 720px) {
-  .got-title-bar   { padding: 18px 22px; }
-  .got-title-ring  { width: 180px; height: 180px; }
-  .got-title-rule  { display: none; }
+  will-change: opacity;
+  transform: translateZ(0);
 }
