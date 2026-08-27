@@ -478,6 +478,22 @@ body {
   .got-corner         { display: none; }
   .got-title          { font-size: 28px; }
 }
+/* ── Legibility over the footage ──────────────────────────────────────────
+   These run 8–13px with wide tracking, straight over a moving, brightly lit
+   picture, and carry no shadow of their own — so wherever the frame goes pale
+   they wash out. A dark shadow lifts them off it. Colour and type unchanged;
+   this only separates them from what is behind. */
+.got-nav-logo,
+.got-nav-links li a,
+.got-subtitle,
+.got-chapter-label,
+.got-scroll-hint span {
+  text-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.92),
+    0 0 10px rgba(0, 0, 0, 0.7),
+    0 0 26px rgba(0, 0, 0, 0.45);
+}
+
 /* ── Title card clip — the real thing, cut from the opening sequence ─────── */
 .got-title-video {
   position: absolute;
