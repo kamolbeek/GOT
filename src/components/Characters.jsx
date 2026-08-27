@@ -12,30 +12,32 @@ const initialsOf = (name) =>
   name.split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0]).join('')
 
 // ─── Portrait ───────────────────────────────────────────────────────────────
-// Falls back to a monogram when no photo is supplied (or a supplied one 404s),
-// so an empty roster still looks deliberate rather than broken.
+// The house sigil sits *behind* the frame as a backdrop, so it still reads
+// once a real photo fills the circle. Without a photo the circle falls back to
+// a monogram, which keeps an unfinished roster looking deliberate.
 const Portrait = ({ src, name, house, large = false }) => {
   const [failed, setFailed] = useState(false)
   const showImage = src && !failed
 
   return (
-    <div className={`ch-portrait ${large ? 'ch-portrait--large' : ''}`}>
-      {showImage ? (
-        <img
-          className="ch-portrait-img"
-          src={src}
-          alt={name}
-          loading="lazy"
-          decoding="async"
-          onError={() => setFailed(true)}
-        />
-      ) : (
-        <div className="ch-portrait-fallback" aria-hidden="true">
-          <img className="ch-portrait-sigil" src={house.image} alt="" aria-hidden="true" />
-          <span className="ch-portrait-initials">{initialsOf(name)}</span>
-        </div>
-      )}
-      <span className="ch-portrait-frame" aria-hidden="true" />
+    <div className={`ch-portrait-wrap ${large ? 'ch-portrait-wrap--large' : ''}`}>
+      <img className="ch-portrait-backdrop" src={house.image} alt="" aria-hidden="true" />
+
+      <div className={`ch-portrait ${large ? 'ch-portrait--large' : ''}`}>
+        {showImage ? (
+          <img
+            className="ch-portrait-img"
+            src={src}
+            alt={name}
+            loading="lazy"
+            decoding="async"
+            onError={() => setFailed(true)}
+          />
+        ) : (
+          <span className="ch-portrait-initials" aria-hidden="true">{initialsOf(name)}</span>
+        )}
+        <span className="ch-portrait-frame" aria-hidden="true" />
+      </div>
     </div>
   )
 }
@@ -139,6 +141,23 @@ const CharacterDetail = ({ meta, copy, house, houseName, section, onClose }) => 
   )
 }
 
+// ─── Optional logo ──────────────────────────────────────────────────────────
+// Drop a file at public/images/got-logo.png and it appears above the heading.
+// Until then it renders nothing at all, rather than a broken-image icon.
+const SectionLogo = () => {
+  const [failed, setFailed] = useState(false)
+  if (failed) return null
+  return (
+    <img
+      className="characters-logo fade-up"
+      src="/images/got-logo.png"
+      alt=""
+      aria-hidden="true"
+      onError={() => setFailed(true)}
+    />
+  )
+}
+
 // ─── Section ────────────────────────────────────────────────────────────────
 const Characters = () => {
   const { t } = useLang()
@@ -192,6 +211,7 @@ const Characters = () => {
       <div className="characters-bg-texture" />
 
       <header ref={headerRef} className="characters-header">
+        <SectionLogo />
         <p className="characters-eyebrow fade-up">{section.eyebrow}</p>
         <div className="header-ornament">
           <span className="ornament-line" />
