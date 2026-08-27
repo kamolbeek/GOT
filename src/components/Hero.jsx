@@ -10,7 +10,7 @@ gsap.registerPlugin(ScrollTrigger)
 // How many viewport heights the pinned hero occupies
 const SCROLL_VH = 6
 // Frame rate of the source video — we never seek finer than one frame
-const VIDEO_FPS = 25
+const VIDEO_FPS = 24
 // 0 = frozen, 1 = instant. Lower = smoother but laggier behind the scroll.
 const EASE = 0.14
 
