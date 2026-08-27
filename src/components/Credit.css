@@ -1,0 +1,88 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;500;600;700&family=IM+Fell+English:ital@0;1&display=swap');
+
+/* The card that follows the title, kept deliberately quiet — the screen has
+   just been full of the wordmark, so this is the exhale after it. */
+.credit {
+  position: relative;
+  background: #000;
+  min-height: 62vh;
+  display: grid;
+  place-items: center;
+  padding: 90px 24px;
+  overflow: hidden;
+}
+
+.credit-inner {
+  text-align: center;
+  max-width: 640px;
+}
+
+.credit-line {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 1.1s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.credit-line.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.credit-label {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: #6f6250;
+  margin-bottom: 22px;
+}
+
+.credit-name {
+  font-family: 'Cinzel Decorative', serif;
+  font-weight: 700;
+  font-size: clamp(30px, 5.4vw, 62px);
+  letter-spacing: 0.06em;
+  color: var(--parchment, #f5e6c8);
+  text-shadow: 0 0 34px rgba(201, 168, 76, 0.28);
+}
+
+.credit-rule {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 26px auto 20px;
+  max-width: 200px;
+}
+
+.credit-rule-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--gold-dim, #7a6130));
+}
+
+.credit-rule-line:last-child {
+  background: linear-gradient(to left, transparent, var(--gold-dim, #7a6130));
+}
+
+.credit-rule-diamond {
+  width: 5px;
+  height: 5px;
+  flex: none;
+  background: var(--gold, #c9a84c);
+  transform: rotate(45deg);
+}
+
+.credit-note {
+  font-family: 'IM Fell English', Georgia, serif;
+  font-style: italic;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: #5f594e;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .credit-line { opacity: 1; transform: none; transition: none; }
+}

@@ -114,6 +114,11 @@ export const translations = {
         body: 'Yo g\u2019alaba qozonasan \u2014 yo o\u2019lasan.',
       },
     },
+    credit: {
+      label: 'Saytni yaratgan',
+      name: 'Kamoliddin',
+      note: 'Muz va Olov Qo’shig’i asosida',
+    },
     section1: {
       eyebrow: 'VESTEROSNING BUYUK XONADONLARI',
       titleTop: 'Ulug\u2019',
@@ -227,6 +232,11 @@ export const translations = {
         body: 'Побеждаешь — или умираешь.',
       },
     },
+    credit: {
+      label: 'Автор сайта',
+      name: 'Kamoliddin',
+      note: 'По мотивам «Песни Льда и Пламени»',
+    },
     section1: {
       eyebrow: 'ВЕЛИКИЕ ДОМА ВЕСТЕРОСА',
       titleTop: 'Благородные',
@@ -339,6 +349,11 @@ export const translations = {
         title: 'The Iron Throne',
         body: 'You win — or you die.',
       },
+    },
+    credit: {
+      label: 'Site created by',
+      name: 'Kamoliddin',
+      note: 'After A Song of Ice and Fire',
     },
     section1: {
       eyebrow: 'THE GREAT HOUSES OF WESTEROS',
