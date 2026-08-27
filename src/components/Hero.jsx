@@ -145,8 +145,15 @@ const Hero = () => {
         onUpdate: (self) => { progress.current = self.progress },
       })
 
+      // Fade the overlay in, never animate its gradient. GSAP interpolates a
+      // `background` tween by matching numbers positionally, and the computed
+      // shorthand carries extras (background-color, position, size), so the
+      // colour stops get paired against the wrong numbers and come out in
+      // descending order — which the browser clamps into a hard horizontal
+      // seam across the hero. opacity is compositor-only anyway, which is what
+      // enhance.css already declares will-change for.
       gsap.to(overlayRef.current, {
-        background: 'linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0) 55%)',
+        opacity: 1,
         ease: 'none',
         scrollTrigger: {
           trigger: container,

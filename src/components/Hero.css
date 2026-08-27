@@ -73,7 +73,10 @@ body {
 .got-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0) 50%);
+  /* This is the END state of the scroll darkening. Hero.jsx fades it in with
+     opacity — never by animating the gradient itself. */
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.82) 0%, rgba(0, 0, 0, 0) 55%);
+  opacity: 0.9;
   z-index: 3;
   pointer-events: none;
 }
