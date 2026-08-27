@@ -241,7 +241,12 @@ const Hero = () => {
   }, [videoReady, paintChapter])
 
   // ─── Render ───────────────────────────────────────────────────────────────
-  const navItems = [t.nav.world, t.nav.characters, t.nav.houses, t.nav.history]
+  const navItems = [
+    { label: t.nav.world,      href: '#0' },
+    { label: t.nav.characters, href: '#characters' },
+    { label: t.nav.houses,     href: '#houses' },
+    { label: t.nav.history,    href: '#0' },
+  ]
 
   return (
     <>
@@ -287,8 +292,8 @@ const Hero = () => {
           <nav className="got-nav">
             <div className="got-nav-logo">{t.brand}</div>
             <ul className="got-nav-links">
-              {navItems.map(label => (
-                <li key={label}><a href="#0">{label}</a></li>
+              {navItems.map(({ label, href }) => (
+                <li key={label}><a href={href}>{label}</a></li>
               ))}
             </ul>
           </nav>

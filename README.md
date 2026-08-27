@@ -23,8 +23,9 @@ public/
 scripts/
   optimize-video.sh  videoni scrub uchun qayta kodlash
 src/
-  components/      Hero, Section1, LanguageSwitcher
-  i18n/            translations.js — barcha matn shu yerda
+  components/      Hero, Section1, Characters, LanguageSwitcher
+  i18n/            translations.js — sayt matni
+                   characters.js   — 24 qahramon, uch tilda
   styles/
 ```
 
@@ -47,3 +48,11 @@ uni tez seek qilinadigan qilib qayta kodlaydi (keyframe har 0.4s, B-frame yo'q).
 da saqlanadi va `<html lang>` ga yoziladi. O'zbekchada "xonadon" so'zi nomdan
 keyin keladi (`STARK XONADONI`), boshqalarda oldin — buni `houseWordPosition`
 boshqaradi.
+
+**Qahramonlar** — har bir xonadon a'zolari bir qatorda birga turadi, scroll qilganda
+navbat bilan paydo bo'ladi. Kartaga bosilsa, o'sha qahramonning rasmi va to'liq
+tarixi alohida oynada ochiladi (Esc yoki fon bosilsa yopiladi).
+
+Rasm berilmagan qahramon uchun monogramma va xonadon gerbi chiziladi, shuning
+uchun rasmlarni bosqichma-bosqich qo'shsa ham sayt to'liq ishlaydi.
+Batafsil — [SETUP.md](./SETUP.md).

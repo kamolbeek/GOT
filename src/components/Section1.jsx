@@ -125,7 +125,7 @@ const Section1 = () => {
   }, [])
 
   return (
-    <section ref={sectionRef} className="section1">
+    <section ref={sectionRef} className="section1" id="houses">
       <div className="section1-bg-texture" />
       <div className="section1-bg-vignette" />
 

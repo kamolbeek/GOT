@@ -1,3 +1,5 @@
+import { characterCopy } from './characters'
+
 // ─── Available languages ─────────────────────────────────────────────────────
 export const LANGS = [
   { code: 'uz', label: 'UZ', name: "O'zbekcha" },
@@ -403,4 +405,12 @@ export const translations = {
       },
     },
   },
+}
+
+// ─── Character copy ─────────────────────────────────────────────────────────
+// The roster runs to 24 people in three languages, so it lives in
+// characters.js rather than bloating this file. Attached here so components
+// keep reading everything through one `t` object: t.characters.people[id]
+for (const lang of Object.keys(translations)) {
+  translations[lang].characters = characterCopy[lang]
 }

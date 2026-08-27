@@ -26,9 +26,11 @@ macOS'dan tashqarida `brew` o'rniga tizim paket menejeridan foydalaning
 
 ## Tilni qo'shish yoki matnni tahrirlash
 
-Butun matn bitta faylda: `src/i18n/translations.js`.
-Yangi til qo'shish uchun `LANGS` ro'yxatiga kod qo'shing va `translations` obyektiga
-xuddi shu tuzilishdagi blok yozing. Boshqa hech qayerga tegish shart emas.
+Matn ikkita faylda:
+`src/i18n/translations.js` (sayt matni) va `src/i18n/characters.js` (qahramonlar).
+Yangi til qo'shish uchun `LANGS` ro'yxatiga kod qo'shing, `translations` obyektiga
+xuddi shu tuzilishdagi blok yozing va `characters.js` dagi `characterCopy` ga ham
+o'sha til uchun blok qo'shing. Boshqa hech qayerga tegish shart emas.
 
 Tanlangan til `localStorage` da saqlanadi va `<html lang="...">` ga yoziladi.
 
@@ -47,3 +49,33 @@ Olti xonadon gerbi `public/images/` da, `.webp` formatida:
 | `npm run build` | `dist/` ga production build |
 | `npm run preview` | Build qilingan versiyani ko'rish |
 | `npm run lint` | ESLint tekshiruvi |
+
+## Qahramonlar
+
+24 qahramon, 6 xonadon bo'yicha guruhlangan. Barchasi `src/i18n/characters.js` da:
+
+- `CHARACTER_META` — kim qaysi xonadonda va rasmi qayerda (tildan mustaqil)
+- `characterCopy` — ism, unvon, shior va tarix; uch tilda
+
+### Rasm qo'shish
+
+Hozir rasm o'rniga monogramma (masalan `JS`) va xonadon gerbi ko'rsatiladi.
+Haqiqiy rasm qo'yish uchun:
+
+1. Faylni `public/images/characters/` ga tashlang, masalan `jon.jpg`
+2. `characters.js` da o'sha qatorni yangilang:
+
+```js
+{ id: 'jon', house: 'stark', image: '/images/characters/jon.jpg' },
+```
+
+Rasm topilmasa yoki yuklanmasa, avtomatik ravishda monogrammaga qaytadi —
+ya'ni bir nechtasini qo'yib, qolganini keyin qo'shsangiz ham sayt buzilmaydi.
+
+Eng yaxshi natija uchun: kvadrat (1:1) kesilgan, yuz yuqori qismda,
+tavsiya etilgan o'lcham ~600x600.
+
+### Yangi qahramon qo'shish
+
+`CHARACTER_META` ga qator qo'shing va `characterCopy` ning **uchala** tilida
+o'sha `id` uchun blok yozing (`name`, `title`, `words`, `bio`).
