@@ -14,14 +14,18 @@ const VIDEO_FPS = 24
 // 0 = frozen, 1 = instant. Lower = smoother but laggier behind the scroll.
 const EASE = 0.14
 
-// Scroll window for the title card. It closes the sequence the way the show
-// does: the throne lands, the card rises over it, and the pin then releases
-// straight into the houses — the scroll itself is the cut, so the card never
-// fades out. TITLE_OUT sits past 1 for that reason.
-const TITLE_IN   = 0.90
+// The footage finishes at this share of the runway, not at the very end. The
+// last frame is the throne, and it needs to be seen before anything covers it,
+// so the remaining scroll is left clear for it to hold.
+const VIDEO_SPAN = 0.78
+
+// Scroll window for the title card. It opens only once the throne has held on
+// its own, then rises and stays: the pin releasing into the houses is the cut,
+// so the card never fades out. TITLE_OUT sits past 1 for that reason.
+const TITLE_IN   = 0.87
 const TITLE_OUT  = 1.02
 // Share of the window spent fading in. The rest holds at full.
-const TITLE_FADE = 0.34
+const TITLE_FADE = 0.42
 
 const Hero = () => {
   const { t } = useLang()
@@ -216,7 +220,10 @@ const Hero = () => {
 
     const tick = () => {
       const p = progress.current
-      const target = p * duration
+      // Footage and chapters share a normalised progress that completes at
+      // VIDEO_SPAN, so the throne lands early and holds while the scroll runs on.
+      const pv = p < VIDEO_SPAN ? p / VIDEO_SPAN : 1
+      const target = pv * duration
 
       shown += (target - shown) * EASE
       if (Math.abs(target - shown) < frame * 0.4) shown = target
@@ -257,7 +264,7 @@ const Hero = () => {
         }
       }
 
-      let idx = CHAPTER_META.findIndex(c => p >= c.progress[0] && p < c.progress[1])
+      let idx = CHAPTER_META.findIndex(c => pv >= c.progress[0] && pv < c.progress[1])
       if (idx === -1) idx = CHAPTER_META.length - 1
       if (idx !== lastChapter) {
         lastChapter = idx

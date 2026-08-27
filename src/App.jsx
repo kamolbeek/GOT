@@ -10,9 +10,9 @@ function App() {
     <>
       <LanguageSwitcher />
       <Hero />
-      <Credit />
       <Section1 />
       <Characters />
+      <Credit />
     </>
   )
 }

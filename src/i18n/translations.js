@@ -115,9 +115,9 @@ export const translations = {
       },
     },
     credit: {
-      label: 'Saytni yaratgan',
+      by: 'Sayt muallifi',
       name: 'Kamoliddin',
-      note: 'Muz va Olov Qo’shig’i asosida',
+      email: 'kamaliddinashurov@gmail.com',
     },
     section1: {
       eyebrow: 'VESTEROSNING BUYUK XONADONLARI',
@@ -233,9 +233,9 @@ export const translations = {
       },
     },
     credit: {
-      label: 'Автор сайта',
+      by: 'Автор сайта',
       name: 'Kamoliddin',
-      note: 'По мотивам «Песни Льда и Пламени»',
+      email: 'kamaliddinashurov@gmail.com',
     },
     section1: {
       eyebrow: 'ВЕЛИКИЕ ДОМА ВЕСТЕРОСА',
@@ -351,9 +351,9 @@ export const translations = {
       },
     },
     credit: {
-      label: 'Site created by',
+      by: 'By',
       name: 'Kamoliddin',
-      note: 'After A Song of Ice and Fire',
+      email: 'kamaliddinashurov@gmail.com',
     },
     section1: {
       eyebrow: 'THE GREAT HOUSES OF WESTEROS',
