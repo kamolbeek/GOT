@@ -14,6 +14,12 @@ const VIDEO_FPS = 24
 // 0 = frozen, 1 = instant. Lower = smoother but laggier behind the scroll.
 const EASE = 0.14
 
+// Scroll window for the title card. It lands inside the winterfell chapter
+// (0.12–0.30), where the book gives way to the mountains.
+const TITLE_IN   = 0.14
+const TITLE_PEAK = 0.22
+const TITLE_OUT  = 0.31
+
 const Hero = () => {
   const { t } = useLang()
 
@@ -29,6 +35,7 @@ const Hero = () => {
   const vignetteRef     = useRef(null)
   const chapterLabelRef = useRef(null)
   const runeBarRef      = useRef(null)
+  const titleCardRef    = useRef(null)
 
   // Live scroll progress (0…1) — written by ScrollTrigger, read by the rAF loop.
   // A ref, not state: this must never trigger a React re-render.
@@ -216,6 +223,21 @@ const Hero = () => {
         vignetteRef.current.style.opacity = String(0.4 + Math.sin(p * Math.PI) * 0.14)
       }
 
+      // Title card: rises in, holds, falls away — a single beat at the handover
+      if (titleCardRef.current) {
+        let a = 0
+        if (p > TITLE_IN && p < TITLE_OUT) {
+          a = p <= TITLE_PEAK
+            ? (p - TITLE_IN) / (TITLE_PEAK - TITLE_IN)
+            : 1 - (p - TITLE_PEAK) / (TITLE_OUT - TITLE_PEAK)
+        }
+        a = a < 0 ? 0 : a > 1 ? 1 : a
+        const e = a * a * (3 - 2 * a)          // smoothstep
+        titleCardRef.current.style.opacity = String(e)
+        titleCardRef.current.style.transform =
+          `translate(-50%, -50%) scale(${(1.16 - 0.16 * e).toFixed(4)})`
+      }
+
       let idx = CHAPTER_META.findIndex(c => p >= c.progress[0] && p < c.progress[1])
       if (idx === -1) idx = CHAPTER_META.length - 1
       if (idx !== lastChapter) {
@@ -278,6 +300,16 @@ const Hero = () => {
           <div ref={vignetteRef} className="got-vignette" />
           <div ref={overlayRef}  className="got-overlay" />
           <div className="got-grain" />
+
+          <div ref={titleCardRef} className="got-title-card" aria-hidden="true">
+            <span className="got-title-bloom" />
+            <span className="got-title-ring" />
+            <span className="got-title-bar">
+              <span className="got-title-text">{t.brand}</span>
+            </span>
+            <span className="got-title-rule got-title-rule-l" />
+            <span className="got-title-rule got-title-rule-r" />
+          </div>
 
           {['tl', 'tr', 'bl', 'br'].map(pos => (
             <div key={pos} className={`got-corner got-corner-${pos}`}>
