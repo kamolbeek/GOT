@@ -61,16 +61,77 @@
 .world-map.dragging { cursor: grabbing; }
 
 /* ── Ink on parchment ── */
-.w-land--far { fill: #e3d5b0; }
-
-.w-land {
-  fill: #e9dcbb;
+/* The flat shelf the raised plates sit on — the coastline of the whole
+   continent, drawn once beneath everything. */
+.w-land--far {
+  fill: #dfd0aa;
   stroke: #6b5433;
-  stroke-width: 2.2;
-  stroke-linejoin: round;
-  /* Ink keeps its weight as the map is zoomed — scaling it turns the coast
-     into a thick brown band. Real maps hold their line width too. */
+  stroke-width: 2;
   vector-effect: non-scaling-stroke;
+}
+
+.w-shelf {
+  fill: #d9c9a2;
+  stroke: #6b5433;
+  stroke-width: 2;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+/* ── Region plates ──────────────────────────────────────────────────────
+   Each land is a slab standing off the map: a dark side wall drawn beneath a
+   lit top face. The gaps between slabs are the borders — no shapes are
+   scattered over the land to stand in for terrain. */
+.w-plate { cursor: pointer; outline: none; }
+
+.w-plate-side {
+  fill: url(#plateSide);
+  stroke: #4a3a22;
+  stroke-width: 1;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.w-plate-face {
+  fill: url(#plateTop);
+  stroke: #5f4a2c;
+  stroke-width: 1.8;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  filter: url(#plateShadow);
+  transition: fill 0.3s;
+}
+
+.w-plate:hover .w-plate-face,
+.w-plate:focus-visible .w-plate-face { fill: #f6ecd2; }
+
+.w-plate.on .w-plate-face { fill: #f8efd8; stroke: #b8912f; stroke-width: 2.6; }
+
+/* ── Crests ──────────────────────────────────────────────────────────────
+   Placed on the slab in their own outline. No disc, no clip. */
+.w-crest { cursor: pointer; }
+
+.w-crest-img {
+  filter: drop-shadow(0 3px 4px rgba(60, 44, 22, 0.55));
+  transition: filter 0.3s;
+}
+
+.w-crest.on .w-crest-img {
+  filter: drop-shadow(0 4px 7px rgba(60, 44, 22, 0.7));
+}
+
+.w-crest-mark { fill: #7a6242; }
+
+.w-crest-name {
+  fill: #3d2f1b;
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  paint-order: stroke;
+  stroke: rgba(243, 232, 202, 0.95);
+  stroke-width: 4px;
+  pointer-events: none;
 }
 
 .w-wall line { stroke: #4e6274; stroke-width: 3; vector-effect: non-scaling-stroke; }
@@ -87,21 +148,6 @@
   font-style: italic;
   letter-spacing: 0.24em;
   opacity: 0.75;
-}
-
-.w-relief path,
-.w-relief circle {
-  fill: none;
-  stroke: #7a6242;
-  stroke-width: 1.4;
-  vector-effect: non-scaling-stroke;
-}
-
-.w-relief-text {
-  fill: #8a7350;
-  font-family: 'IM Fell English', Georgia, serif;
-  font-style: italic;
-  letter-spacing: 0.12em;
 }
 
 /* ── Settlements ── */

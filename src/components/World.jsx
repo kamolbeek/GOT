@@ -1,7 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useLang } from '../i18n/LanguageContext'
 import { HOUSE_META } from '../i18n/translations'
-import { MAP_REGIONS, MAP_PLACES, MAP_WATERS, MAP_RANGES, MAP_FORESTS } from '../i18n/places'
+import { MAP_REGIONS, MAP_PLACES, MAP_WATERS, REGION_SHAPES } from '../i18n/places'
+
+// Sigils with their backgrounds knocked out, so each stands on the map in its
+// own heraldic shape instead of being cropped into a disc.
+const SIGILS = import.meta.glob('../assets/sigils/*.png', {
+  eager: true, query: '?url', import: 'default',
+})
+const sigilFor = (house) => SIGILS[`../assets/sigils/${house}.png`] ?? null
 import './World.css'
 
 const HOUSE_BY_ID = Object.fromEntries(HOUSE_META.map(h => [h.id, h]))
@@ -14,6 +21,7 @@ const VB = { w: 1560, h: 1400 }
 // which work from the centre outwards, land on the continent rather than on
 // open sea. Essos is a strip along the far edge.
 const WEST = 'translate(150 -70) scale(1.25)'
+const DEPTH = 15      // how far each region plate stands off the map
 const MIN_K = 1
 const MAX_K = 7
 
@@ -175,6 +183,20 @@ const World = () => {
               <stop offset="62%"  stopColor="#e2d2ab" />
               <stop offset="100%" stopColor="#c9b487" />
             </radialGradient>
+
+            {/* Lit from the upper left, so every plate reads as a raised slab */}
+            <linearGradient id="plateTop" x1="0" y1="0" x2="0.45" y2="1">
+              <stop offset="0%"   stopColor="#f3e8ca" />
+              <stop offset="55%"  stopColor="#e4d5b0" />
+              <stop offset="100%" stopColor="#cfbc93" />
+            </linearGradient>
+            <linearGradient id="plateSide" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%"   stopColor="#8a7350" />
+              <stop offset="100%" stopColor="#5a4830" />
+            </linearGradient>
+            <filter id="plateShadow" x="-20%" y="-20%" width="150%" height="160%">
+              <feDropShadow dx="3" dy="9" stdDeviation="7" floodColor="#4a3a22" floodOpacity="0.45" />
+            </filter>
           </defs>
 
           <g transform={`translate(${x} ${y}) scale(${k})`}>
@@ -196,41 +218,35 @@ const World = () => {
 
             {/* land */}
             <g transform={WEST}>
-            <path className="w-land" d={COAST} />
-            {IRON_ISLES.map((d, i) => <path key={i} className="w-land" d={d} />)}
-            <path className="w-land" d={DRAGONSTONE} />
+            <path className="w-shelf" d={COAST} />
+            {IRON_ISLES.map((d, i) => <path key={i} className="w-shelf" d={d} />)}
+            <path className="w-shelf" d={DRAGONSTONE} />
+
+            {/* Each region is its own raised plate; the gaps between them are
+                the borders, and the offset copy beneath is its side wall. */}
+            {MAP_REGIONS.map(r => {
+              const shape = REGION_SHAPES[r.id]
+              const lift = r.id === active ? 9 : 0
+              return (
+                <g key={r.id}
+                   className={`w-plate ${r.id === active ? 'on' : ''}`}
+                   onClick={(e) => { e.stopPropagation(); setActive(r.id) }}
+                   role="button" tabIndex={0}
+                   aria-label={copy[r.id].name}
+                   onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setActive(r.id) } }}>
+                  <path className="w-plate-side" d={shape.d} transform={`translate(0 ${DEPTH - lift})`} />
+                  <path className="w-plate-face" d={shape.d} transform={`translate(0 ${-lift})`} />
+                </g>
+              )
+            })}
 
             {/* the Wall */}
             <g className="w-wall">
               <line x1="300" y1="176" x2="640" y2="176" />
               <line x1="300" y1="182" x2="640" y2="182" />
             </g>
-            <text className="w-wall-text" x="470" y="166" textAnchor="middle"
-                  style={{ fontSize: 15 * inv }}>THE WALL</text>
-
-            {/* relief */}
-            {MAP_RANGES.filter(r => k >= r.minZoom).map(r => (
-              <g key={r.label} className="w-relief">
-                {Array.from({ length: r.n }).map((_, i) => {
-                  const px = r.x + (i % 4) * 22 - 30
-                  const py = r.y + Math.floor(i / 4) * 18
-                  return <path key={i} d={`M${px} ${py} l9 -15 l9 15 Z`} />
-                })}
-                <text className="w-relief-text" x={r.x} y={r.y + 34} textAnchor="middle"
-                      style={{ fontSize: 11 * inv }}>{r.label}</text>
-              </g>
-            ))}
-            {MAP_FORESTS.filter(f => k >= f.minZoom).map(f => (
-              <g key={f.label} className="w-relief">
-                {Array.from({ length: f.n }).map((_, i) => {
-                  const px = f.x + (i % 3) * 20 - 20
-                  const py = f.y + Math.floor(i / 3) * 16
-                  return <circle key={i} cx={px} cy={py} r="6" />
-                })}
-                <text className="w-relief-text" x={f.x} y={f.y + 30} textAnchor="middle"
-                      style={{ fontSize: 11 * inv }}>{f.label}</text>
-              </g>
-            ))}
+            <text className="w-wall-text" x="304" y="196" textAnchor="start"
+                  style={{ fontSize: 14 * inv }}>THE WALL</text>
 
             {/* seas */}
             {MAP_WATERS.filter(w => k >= w.minZoom).map(w => (
@@ -255,28 +271,27 @@ const World = () => {
               </g>
             ))}
 
-            {/* region sigils */}
+            {/* crests — natural shape, standing on their plate */}
             {MAP_REGIONS.map(r => {
-              const house = r.house ? HOUSE_BY_ID[r.house] : null
-              const on = r.id === active
-              const R = 26
+              const shape = REGION_SHAPES[r.id]
+              const href = r.house ? sigilFor(r.house) : null
+              const lift = r.id === active ? 9 : 0
+              const [sx, sy] = shape.sigilAt
+              const [nx, ny] = shape.nameAt
+              const S = 62
               return (
-                <g key={r.id}
-                   className={`w-sigil ${on ? 'on' : ''}`}
-                   onClick={(e) => { e.stopPropagation(); setActive(r.id) }}
-                   role="button" tabIndex={0}
-                   aria-label={copy[r.id].name}
-                   onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setActive(r.id) } }}>
-                  <g transform={`translate(${r.x} ${r.y}) scale(${inv})`}>
-                    <circle className="w-sigil-disc" cx="0" cy="0" r={R} />
-                    {house
-                      ? <image href={house.image} x={-R + 4} y={-R + 4}
-                               width={(R - 4) * 2} height={(R - 4) * 2}
-                               clipPath="circle(50%)" preserveAspectRatio="xMidYMid slice" />
-                      : <text className="w-sigil-mark" x="0" y="7" textAnchor="middle"
-                              style={{ fontSize: 20 }}>✦</text>}
-                    <circle className="w-sigil-ring" cx="0" cy="0" r={R} />
-                    <text className="w-sigil-name" x="0" y={R + 16} textAnchor="middle"
+                <g key={r.id} className={`w-crest ${r.id === active ? 'on' : ''}`}
+                   onClick={(e) => { e.stopPropagation(); setActive(r.id) }}>
+                  <g transform={`translate(${sx} ${sy - lift}) scale(${inv})`}>
+                    {href
+                      ? <image className="w-crest-img" href={href}
+                               x={-S / 2} y={-S / 2} width={S} height={S}
+                               preserveAspectRatio="xMidYMid meet" />
+                      : <text className="w-crest-mark" x="0" y="10" textAnchor="middle"
+                              style={{ fontSize: 30 }}>✦</text>}
+                  </g>
+                  <g transform={`translate(${nx} ${ny - lift}) scale(${inv})`}>
+                    <text className="w-crest-name" textAnchor="middle"
                           style={{ fontSize: 13 }}>{copy[r.id].name}</text>
                   </g>
                 </g>

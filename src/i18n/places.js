@@ -106,3 +106,32 @@ export const MAP_FORESTS = [
   { x: 566, y: 640, n: 5, minZoom: 2.6, label: 'Kingswood' },
   { x: 452, y: 786, n: 4, minZoom: 3.8, label: 'Rainwood' },
 ]
+
+/* ── Mintaqa plitalari ────────────────────────────────────────────────────
+   Har biri alohida ko'tarilgan plita bo'lib chiziladi (3D maketdek), shuning
+   uchun ular bir-biriga tegmaydi — oradagi bo'shliq chegara chizig'i bo'lib
+   ko'rinadi. Gerb plita ustida, o'z tabiiy shaklida turadi.
+   `sigilAt` — gerb markazi, `nameAt` — nom joyi (plita ustida).
+------------------------------------------------------------------------- */
+export const REGION_SHAPES = {
+  beyond:      { d: 'M296 92 L360 54 L470 44 L566 62 L612 118 L620 168 L306 168 L286 130 Z',
+                 sigilAt: [452, 96], nameAt: [452, 142] },
+  north:       { d: 'M300 192 L616 192 L648 262 L664 348 L636 420 L566 456 L438 462 L372 424 L316 344 L286 262 Z',
+                 sigilAt: [468, 300], nameAt: [468, 440] },
+  ironislands: { d: 'M232 486 L286 476 L318 506 L308 556 L256 574 L214 540 Z',
+                 sigilAt: [266, 518], nameAt: [266, 592] },
+  riverlands:  { d: 'M376 470 L556 466 L588 520 L578 596 L516 632 L432 620 L388 560 L364 512 Z',
+                 sigilAt: [478, 534], nameAt: [478, 616] },
+  vale:        { d: 'M598 474 L654 500 L682 558 L664 620 L600 634 L582 578 L586 512 Z',
+                 sigilAt: [628, 552], nameAt: [628, 622] },
+  westerlands: { d: 'M262 566 L378 546 L424 606 L416 704 L352 754 L282 720 L252 640 Z',
+                 sigilAt: [340, 640], nameAt: [340, 736] },
+  crownlands:  { d: 'M588 644 L664 640 L700 690 L684 742 L604 756 L568 706 L570 668 Z',
+                 sigilAt: [632, 692], nameAt: [632, 750] },
+  reach:       { d: 'M272 776 L400 726 L520 758 L552 848 L506 940 L398 972 L310 910 L262 838 Z',
+                 sigilAt: [404, 846], nameAt: [404, 944] },
+  stormlands:  { d: 'M566 766 L672 758 L710 816 L692 886 L616 916 L560 872 L546 812 Z',
+                 sigilAt: [624, 832], nameAt: [624, 902] },
+  dorne:       { d: 'M396 986 L522 952 L624 944 L698 996 L708 1064 L622 1120 L496 1116 L414 1058 Z',
+                 sigilAt: [552, 1030], nameAt: [552, 1104] },
+}
