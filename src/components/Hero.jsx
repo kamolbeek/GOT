@@ -14,13 +14,14 @@ const VIDEO_FPS = 24
 // 0 = frozen, 1 = instant. Lower = smoother but laggier behind the scroll.
 const EASE = 0.14
 
-// Scroll window for the title card. The book gives way to the mountains
-// between 9s and 12s of the hero footage, i.e. 0.24–0.32 of the runway; the
-// card is timed to land across that handover.
-const TITLE_IN  = 0.22
-const TITLE_OUT = 0.35
-// Fraction of the window spent fading in / out; the rest holds at full.
-const TITLE_FADE = 0.26
+// Scroll window for the title card. It closes the sequence the way the show
+// does: the throne lands, the card rises over it, and the pin then releases
+// straight into the houses — the scroll itself is the cut, so the card never
+// fades out. TITLE_OUT sits past 1 for that reason.
+const TITLE_IN   = 0.90
+const TITLE_OUT  = 1.02
+// Share of the window spent fading in. The rest holds at full.
+const TITLE_FADE = 0.34
 
 const Hero = () => {
   const { t } = useLang()
@@ -236,12 +237,7 @@ const Hero = () => {
       // Title card: fades in over the handover, holds, fades out
       if (titleVid) {
         const w = (p - TITLE_IN) / (TITLE_OUT - TITLE_IN)
-        let a = 0
-        if (w > 0 && w < 1) {
-          a = w < TITLE_FADE ? w / TITLE_FADE
-            : w > 1 - TITLE_FADE ? (1 - w) / TITLE_FADE
-            : 1
-        }
+        let a = w <= 0 ? 0 : w < TITLE_FADE ? w / TITLE_FADE : 1
         a = a < 0 ? 0 : a > 1 ? 1 : a
         const eased = a * a * (3 - 2 * a)                       // smoothstep
         titleVid.style.opacity = String(eased)
