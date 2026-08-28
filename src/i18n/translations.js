@@ -95,6 +95,8 @@ export const translations = {
     audio: {
       play: 'Musiqani yoqish',
       pause: 'Musiqani o\u2019chirish',
+      loading: 'Musiqa yuklanmoqda\u2026',
+      unavailable: 'Musiqa yuklanmadi',
     },
     cta: {
       primary: 'Sayohatni boshlash',
@@ -217,6 +219,8 @@ export const translations = {
     audio: {
       play: 'Включить музыку',
       pause: 'Выключить музыку',
+      loading: 'Музыка загружается\u2026',
+      unavailable: 'Музыка не загрузилась',
     },
     cta: {
       primary: 'Начать путь',
@@ -339,6 +343,8 @@ export const translations = {
     audio: {
       play: 'Play the theme',
       pause: 'Mute the theme',
+      loading: 'Loading the theme\u2026',
+      unavailable: 'The theme could not load',
     },
     cta: {
       primary: 'Begin the Journey',

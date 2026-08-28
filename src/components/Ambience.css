@@ -14,8 +14,6 @@
   transition: border-color 0.3s ease, background 0.3s ease;
 }
 
-.ambience:hover { border-color: rgba(201, 168, 76, 0.55); }
-
 .ambience svg {
   width: 19px;
   height: 19px;
@@ -28,7 +26,8 @@
 }
 
 .amb-cross,
-.amb-wave {
+.amb-wave,
+.amb-spin {
   fill: none;
   stroke: rgba(200, 191, 176, 0.62);
   stroke-width: 1.6;
@@ -36,31 +35,58 @@
   transition: stroke 0.3s ease;
 }
 
-.ambience:hover .amb-horn { fill: #e8c97a; }
-.ambience:hover .amb-cross,
-.ambience:hover .amb-wave { stroke: #e8c97a; }
+/* Hover only brightens; it must not look like the playing state, or a reader
+   cannot tell a hovered mute button from a sounding one. */
+.ambience:hover:not(:disabled) { border-color: rgba(201, 168, 76, 0.5); }
+.ambience:hover:not(:disabled) .amb-horn { fill: rgba(232, 201, 122, 0.85); }
+.ambience:hover:not(:disabled) .amb-cross,
+.ambience:hover:not(:disabled) .amb-wave,
+.ambience:hover:not(:disabled) .amb-spin { stroke: rgba(232, 201, 122, 0.85); }
 
-.ambience.on { border-color: rgba(201, 168, 76, 0.5); }
-.ambience.on .amb-horn {
-  fill: #c9a84c;
-  filter: drop-shadow(0 0 6px rgba(201, 168, 76, 0.5));
+/* Sounding: a lit gold plate, unmistakable at a glance. */
+.ambience--playing {
+  border-color: rgba(201, 168, 76, 0.85);
+  background: rgba(201, 168, 76, 0.16);
 }
-.ambience.on .amb-wave { stroke: #c9a84c; }
+.ambience--playing .amb-horn {
+  fill: #f0d68e;
+  filter: drop-shadow(0 0 6px rgba(201, 168, 76, 0.55));
+}
+.ambience--playing .amb-wave { stroke: #f0d68e; }
 
 /* The waves pulse outward while it plays, so the button reads as live. */
-.ambience.on .amb-wave {
-  animation: amb-pulse 1.8s ease-in-out infinite;
-}
-.ambience.on .amb-wave--2 { animation-delay: 0.22s; }
-.ambience.on .amb-wave--3 { animation-delay: 0.44s; }
+.ambience--playing .amb-wave { animation: amb-pulse 1.8s ease-in-out infinite; }
+.ambience--playing .amb-wave--2 { animation-delay: 0.22s; }
+.ambience--playing .amb-wave--3 { animation-delay: 0.44s; }
 
 @keyframes amb-pulse {
   0%, 100% { opacity: 0.25; }
   40%      { opacity: 1; }
 }
 
+/* Still buffering: an honest waiting state instead of a false glow. */
+.ambience--loading { border-color: rgba(201, 168, 76, 0.5); }
+.ambience--loading .amb-horn { fill: rgba(232, 201, 122, 0.85); }
+.ambience--loading .amb-spin {
+  stroke: rgba(232, 201, 122, 0.9);
+  stroke-dasharray: 6 16;
+  transform-origin: 17.6px 12px;
+  animation: amb-spin 0.9s linear infinite;
+}
+
+@keyframes amb-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Nothing playable reached the browser: dim it and take the cursor away. */
+.ambience--unavailable {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .ambience.on .amb-wave { animation: none; opacity: 1; }
+  .ambience--playing .amb-wave { animation: none; opacity: 1; }
+  .ambience--loading .amb-spin { animation: none; stroke-dasharray: none; }
 }
 
 @media (max-width: 768px) {

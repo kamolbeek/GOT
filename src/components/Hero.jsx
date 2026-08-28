@@ -218,6 +218,7 @@ const Hero = () => {
     const onTitleSeeked = () => { titleInFlight = false }
     titleVid?.addEventListener('seeked', onTitleSeeked)
 
+
     const tick = () => {
       const p = progress.current
       // Footage and chapters share a normalised progress that completes at
@@ -289,6 +290,20 @@ const Hero = () => {
     }
   }, [videoReady, paintChapter])
 
+  // The title clip holds off at first so the theme audio and the opening
+  // footage are not queued behind five more megabytes. Nobody scrolls that far
+  // in five seconds, and this runs whatever the hero video is doing.
+  useEffect(() => {
+    const id = setTimeout(() => {
+      const el = titleVidRef.current
+      if (el && el.preload !== 'auto') {
+        el.preload = 'auto'
+        el.load()
+      }
+    }, 5000)
+    return () => clearTimeout(id)
+  }, [])
+
   // ─── Render ───────────────────────────────────────────────────────────────
   const navItems = [
     { label: t.nav.world,      href: '#world' },
@@ -326,13 +341,17 @@ const Hero = () => {
 
           <div ref={vignetteRef} className="got-vignette" />
           <div ref={overlayRef}  className="got-overlay" />
+          {/* The title clip is not needed until the very end of the runway, so
+              it starts on metadata and lets the theme audio and the opening
+              footage through first; the effect above promotes it after five
+              seconds, long before anyone scrolls that far. */}
           <video
             ref={titleVidRef}
             className="got-title-video"
             src="/video/title.mp4"
             playsInline
             muted
-            preload="auto"
+            preload="metadata"
             disablePictureInPicture
             aria-hidden="true"
           />
