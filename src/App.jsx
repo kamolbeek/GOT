@@ -6,11 +6,15 @@ import Section1 from './components/Section1'
 import Characters from './components/Characters'
 import History from './components/History'
 import LanguageSwitcher from './components/LanguageSwitcher'
+import Ambience from './components/Ambience'
 
 function App() {
   return (
     <>
-      <LanguageSwitcher />
+      <div className="top-bar">
+        <Ambience />
+        <LanguageSwitcher />
+      </div>
       <Hero />
       <World />
       <Section1 />

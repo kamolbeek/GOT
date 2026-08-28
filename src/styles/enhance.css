@@ -75,9 +75,9 @@ html[lang='uz'] .house-sigil-label { letter-spacing: 0.12em; }
   transform: translateZ(0);
 }
 
-/* ── Nav must not collide with the fixed language switcher ───────────────── */
+/* ── Nav must not collide with the fixed language and theme controls ─────── */
 .got-nav {
-  padding-right: 200px;
+  padding-right: 262px;
 }
 
 @media (max-width: 900px) {

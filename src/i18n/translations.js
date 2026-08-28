@@ -92,6 +92,10 @@ export const translations = {
       houses: 'Xonadonlar',
       history: 'Tarix',
     },
+    audio: {
+      play: 'Musiqani yoqish',
+      pause: 'Musiqani o\u2019chirish',
+    },
     cta: {
       primary: 'Sayohatni boshlash',
       ghost: 'Saltanatni kashf etish',
@@ -210,6 +214,10 @@ export const translations = {
       houses: 'Дома',
       history: 'История',
     },
+    audio: {
+      play: 'Включить музыку',
+      pause: 'Выключить музыку',
+    },
     cta: {
       primary: 'Начать путь',
       ghost: 'Исследовать мир',
@@ -327,6 +335,10 @@ export const translations = {
       characters: 'Characters',
       houses: 'Houses',
       history: 'History',
+    },
+    audio: {
+      play: 'Play the theme',
+      pause: 'Mute the theme',
     },
     cta: {
       primary: 'Begin the Journey',

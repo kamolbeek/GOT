@@ -1,8 +1,15 @@
-.lang-switch {
+/* The language pill and the theme toggle ride together in one fixed corner. */
+.top-bar {
   position: fixed;
   top: 22px;
   right: 40px;
   z-index: 120;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lang-switch {
   display: flex;
   align-items: center;
   gap: 0;
@@ -47,9 +54,12 @@
 }
 
 @media (max-width: 768px) {
-  .lang-switch {
+  .top-bar {
     top: 14px;
     right: 14px;
+    gap: 7px;
+  }
+  .lang-switch {
     padding: 5px 9px;
   }
   .lang-btn {
