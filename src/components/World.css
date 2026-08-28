@@ -42,7 +42,7 @@
   position: relative;
   max-width: 1400px;
   margin: 0 auto;
-  aspect-ratio: 2200 / 1340;
+  aspect-ratio: 1920 / 1146;
   border: 1px solid rgba(201, 168, 76, 0.45);
   border-radius: 2px;
   overflow: hidden;
@@ -82,15 +82,30 @@
   background: none;
   border: none;
   cursor: pointer;
+  filter: drop-shadow(0 3px 6px rgba(40, 26, 10, 0.8));
   transition: filter 0.25s;
 }
 
-.world-pin-crest {
-  width: 58px;
-  height: 58px;
-  object-fit: contain;
-  filter: drop-shadow(0 3px 5px rgba(40, 26, 10, 0.75));
+/* Each crest sits on the field of its own banner, cut to a shield, so the six
+   read apart at a glance instead of blending into the parchment. */
+.world-pin-shield {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 60px;
+  padding: 7px 6px 12px;
+  background: var(--field);
+  box-shadow: inset 0 0 0 2px var(--rim), inset 0 0 14px rgba(0, 0, 0, 0.45);
+  clip-path: polygon(0% 0%, 100% 0%, 100% 55%, 93% 71%, 79% 85%, 59% 96%,
+                     50% 100%, 41% 96%, 21% 85%, 7% 71%, 0% 55%);
   transition: transform 0.25s;
+  pointer-events: none;
+}
+
+.world-pin-crest {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
   pointer-events: none;
 }
 
@@ -116,12 +131,13 @@
   transition: background 0.25s, color 0.25s;
 }
 
-.world-pin:hover .world-pin-crest { transform: scale(1.12); }
+.world-pin:hover .world-pin-shield { transform: scale(1.12); }
 
-.world-pin.on .world-pin-crest {
-  transform: scale(1.16);
+.world-pin.on .world-pin-shield { transform: scale(1.18); }
+
+.world-pin.on {
   filter: drop-shadow(0 0 10px rgba(201, 168, 76, 0.95))
-          drop-shadow(0 3px 5px rgba(40, 26, 10, 0.75));
+          drop-shadow(0 3px 6px rgba(40, 26, 10, 0.8));
 }
 
 .world-pin.on .world-pin-name {

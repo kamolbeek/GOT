@@ -127,6 +127,7 @@ const World = () => {
           <img className="world-img" src={mapImage} alt={s.mapLabel} draggable="false" />
 
           {MAP_REGIONS.map(r => {
+            const house = r.house ? HOUSE_BY_ID[r.house] : null
             const href = r.house ? sigilFor(r.house) : null
             const on = r.id === active
             return (
@@ -144,7 +145,14 @@ const World = () => {
                 aria-label={copy[r.id].name}
               >
                 {href
-                  ? <img className="world-pin-crest" src={href} alt="" draggable="false" />
+                  ? (
+                    <span
+                      className="world-pin-shield"
+                      style={{ '--field': house.field, '--rim': house.rim }}
+                    >
+                      <img className="world-pin-crest" src={href} alt="" draggable="false" />
+                    </span>
+                  )
                   : <span className="world-pin-mark">✦</span>}
                 <span className="world-pin-name">{copy[r.id].name}</span>
               </button>

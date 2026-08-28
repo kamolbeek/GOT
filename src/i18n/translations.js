@@ -26,6 +26,8 @@ export const HOUSE_META = [
   {
     id: 'stark',
     image: '/images/one.webp',
+    field: '#dde3e8',
+    rim: '#6f8496',
     accent: '#8fafc4',
     borderColor: '#4a6380',
     bg: 'linear-gradient(135deg, #0d1117 0%, #1a2332 60%, #0d1117 100%)',
@@ -33,6 +35,8 @@ export const HOUSE_META = [
   {
     id: 'lannister',
     image: '/images/two.webp',
+    field: '#8d1a1a',
+    rim: '#c9a84c',
     accent: '#d4a84b',
     borderColor: '#7a6130',
     bg: 'linear-gradient(135deg, #1a1200 0%, #2a1f00 60%, #1a1200 100%)',
@@ -40,6 +44,8 @@ export const HOUSE_META = [
   {
     id: 'targaryen',
     image: '/images/three.webp',
+    field: '#121212',
+    rim: '#a2332c',
     accent: '#c0392b',
     borderColor: '#7a1a1a',
     bg: 'linear-gradient(135deg, #1a0000 0%, #2d0a0a 60%, #1a0000 100%)',
@@ -47,6 +53,8 @@ export const HOUSE_META = [
   {
     id: 'baratheon',
     image: '/images/four.webp',
+    field: '#dfae37',
+    rim: '#7a5f18',
     accent: '#c9a84c',
     borderColor: '#5a5020',
     bg: 'linear-gradient(135deg, #0a0a00 0%, #1f1c00 60%, #0a0a00 100%)',
@@ -54,6 +62,8 @@ export const HOUSE_META = [
   {
     id: 'greyjoy',
     image: '/images/five.webp',
+    field: '#111721',
+    rim: '#b8a040',
     accent: '#b8a040',
     borderColor: '#3a4a5a',
     bg: 'linear-gradient(135deg, #050810 0%, #0a1020 60%, #050810 100%)',
@@ -61,6 +71,8 @@ export const HOUSE_META = [
   {
     id: 'tyrell',
     image: '/images/six.webp',
+    field: '#1c5a27',
+    rim: '#c9a84c',
     accent: '#5a9e48',
     borderColor: '#2a4a20',
     bg: 'linear-gradient(135deg, #030a00 0%, #0a1800 60%, #030a00 100%)',
