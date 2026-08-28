@@ -8,6 +8,18 @@ import './Hero.css'
 gsap.registerPlugin(ScrollTrigger)
 
 // How many viewport heights the pinned hero occupies
+// A portrait phone crops this footage to a centre column and throws the rest
+// away, so it gets a file cut to exactly that column — same pixels, same full
+// height, never rescaled, and a little over half the weight. Decided once at
+// load: swapping the source mid-scroll would jar.
+const PORTRAIT_SRC = '/video/one-portrait.mp4'
+const WIDE_SRC     = '/video/one.mp4'
+const heroSource = () =>
+  typeof window !== 'undefined' &&
+  window.matchMedia('(max-width: 900px) and (orientation: portrait)').matches
+    ? PORTRAIT_SRC
+    : WIDE_SRC
+
 const SCROLL_VH = 6
 // Frame rate of the source video — we never seek finer than one frame
 const VIDEO_FPS = 24
@@ -52,6 +64,8 @@ const Hero = () => {
 
   const [activeChapter, setActiveChapter] = useState(0)
   const [videoReady, setVideoReady]       = useState(false)
+  const [ready, setReady]                 = useState(false)
+  const [heroSrc]                         = useState(heroSource)
   const [vh, setVh]                       = useState(() => window.innerHeight)
 
   // ─── Text swap between chapters ───────────────────────────────────────────
@@ -94,25 +108,51 @@ const Hero = () => {
     paintChapter(prevChapter.current < 0 ? 0 : prevChapter.current, false)
   }, [paintChapter])
 
-  // ─── Wait until the video can actually be seeked ──────────────────────────
+  // ─── Open the site; let the footage catch up ──────────────────────────────
+  // `videoReady` means the footage can be seeked — readyState >= 2
+  // (HAVE_CURRENT_DATA) is when a seek returns frames. `ready` is a far weaker
+  // promise: it only says the page may show itself and start animating.
+  //
+  // They have to be separate. A phone on cellular often refuses to preload at
+  // all, and iOS will not touch a video before a gesture — so waiting on the
+  // footage left the whole site behind a black loading screen with nothing
+  // moving. Now it opens on a timer regardless and the scrub joins in later,
+  // if and when the video becomes seekable.
   useEffect(() => {
     const video = videoRef.current
     if (!video) return
 
-    const markReady = () => setVideoReady(true)
+    const open = () => setReady(true)
+    const markReady = () => { setVideoReady(true); open() }
 
-    // readyState >= 2 (HAVE_CURRENT_DATA) means seeking will return frames
-    if (video.readyState >= 2) {
-      markReady()
-    } else {
-      video.addEventListener('loadeddata', markReady, { once: true })
-      video.addEventListener('canplay', markReady, { once: true })
-    }
+    if (video.readyState >= 2) markReady()
+    video.addEventListener('loadeddata', markReady)
+    video.addEventListener('canplay', markReady)
+    video.addEventListener('error', open)
+    const timer = setTimeout(open, 2500)
+
     return () => {
+      clearTimeout(timer)
       video.removeEventListener('loadeddata', markReady)
       video.removeEventListener('canplay', markReady)
+      video.removeEventListener('error', open)
     }
   }, [])
+
+  // iOS will not fetch a video until the reader has touched the page, so the
+  // first touch nudges it. Harmless everywhere else — it is already loading.
+  useEffect(() => {
+    if (videoReady) return
+    const wake = () => {
+      const v = videoRef.current
+      if (!v || v.readyState >= 2) return
+      v.load()
+      v.play().then(() => v.pause()).catch(() => {})
+    }
+    const evs = ['touchstart', 'pointerdown', 'keydown']
+    evs.forEach(e => window.addEventListener(e, wake, { once: true, passive: true }))
+    return () => evs.forEach(e => window.removeEventListener(e, wake))
+  }, [videoReady])
 
   // ─── Keep the scroll runway in sync with the viewport ─────────────────────
   useEffect(() => {
@@ -133,7 +173,7 @@ const Hero = () => {
 
   // ─── ScrollTrigger + rAF scrub loop ───────────────────────────────────────
   useEffect(() => {
-    if (!videoReady) return
+    if (!ready) return
 
     const video     = videoRef.current
     const container = containerRef.current
@@ -229,7 +269,8 @@ const Hero = () => {
       shown += (target - shown) * EASE
       if (Math.abs(target - shown) < frame * 0.4) shown = target
 
-      if (!inFlight && Math.abs(video.currentTime - shown) > frame) {
+      if (video.readyState >= 2 &&
+          !inFlight && Math.abs(video.currentTime - shown) > frame) {
         inFlight = true
         video.currentTime = shown
       }
@@ -256,7 +297,7 @@ const Hero = () => {
         }
 
         // Only seek while it is on screen; the clip plays through as you scroll
-        if (a > 0 && titleVid.duration) {
+        if (a > 0 && titleVid.readyState >= 2 && titleVid.duration) {
           const want = Math.min(Math.max(w, 0), 1) * titleVid.duration
           if (!titleInFlight && Math.abs(titleVid.currentTime - want) > 0.04) {
             titleInFlight = true
@@ -288,7 +329,7 @@ const Hero = () => {
       titleVid?.removeEventListener('seeked', onTitleSeeked)
       ctx.revert()
     }
-  }, [videoReady, paintChapter])
+  }, [ready, videoReady, paintChapter])
 
   // The title clip holds off at first so the theme audio and the opening
   // footage are not queued behind five more megabytes. Nobody scrolls that far
@@ -314,7 +355,7 @@ const Hero = () => {
 
   return (
     <>
-      <div className={`got-loading ${videoReady ? 'hidden' : ''}`}>
+      <div className={`got-loading ${ready ? 'hidden' : ''}`}>
         <div className="got-loading-logo">{t.brand}</div>
         <div className="got-loading-sub">{t.loadingSub}</div>
         <div className="got-loading-bar-wrap">
@@ -329,10 +370,13 @@ const Hero = () => {
       >
         <div ref={stickyRef} className="got-sticky">
 
+          {/* The poster stands in for the first frame, so a phone still
+              fetching the footage shows the book, not a black hole. */}
           <video
             ref={videoRef}
             className="got-video"
-            src="/video/one.mp4"
+            src={heroSrc}
+            poster="/video/hero-poster.jpg"
             playsInline
             muted
             preload="auto"

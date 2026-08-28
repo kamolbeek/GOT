@@ -23,7 +23,7 @@ const useFade = (audioRef) => {
     // A hidden tab stops serving frames, which would strand the fade at
     // silence — there, jump straight to the target.
     if (document.hidden || ms <= 0) {
-      el.volume = to
+      el.volume = Math.min(1, Math.max(0, to))
       done?.()
       return
     }
@@ -31,7 +31,9 @@ const useFade = (audioRef) => {
     const t0 = performance.now()
     const step = (now) => {
       const p = Math.min(1, (now - t0) / ms)
-      el.volume = from + (to - from) * p
+      // Rounding can land a hair outside [0,1], and the setter throws on that,
+      // which would abandon the fade mid-way and leave the volume stranded.
+      el.volume = Math.min(1, Math.max(0, from + (to - from) * p))
       if (p < 1) frame.current = requestAnimationFrame(step)
       else done?.()
     }

@@ -141,8 +141,12 @@
   border-radius: 2px;
   background: rgba(244, 231, 199, 0.82);
   pointer-events: none;
-  transition: background 0.25s, color 0.25s;
+  transition: background 0.25s, color 0.25s, opacity 0.25s, transform 0.25s;
 }
+
+/* Pulled right back — on a phone's overview the names would sit on top of one
+   another. They appear as the map is zoomed in, which is how it should read. */
+.world-pin.far .world-pin-name { opacity: 0; transform: scale(0.8); }
 
 .world-pin:hover .world-pin-shield { transform: scale(1.12); }
 
@@ -300,4 +304,27 @@
   .world-frame { max-height: 74vh; }
   .world-info { left: 12px; right: 12px; bottom: 12px; width: auto; padding: 22px 20px; }
   .world-hint { display: none; }
+}
+
+/* On a phone the map's own 16:9.5 shape leaves a strip barely 200px tall —
+   too small to read, let alone tap. The frame is given real height instead and
+   the map layer overhangs it, so it opens on the middle of Westeros and pans
+   like any map app. Pins are positioned against the layer, so they stay on
+   their landmarks. */
+@media (max-width: 720px) {
+  .world-frame {
+    aspect-ratio: auto;
+    height: 62vh;
+    height: 62dvh;
+    max-height: none;
+  }
+  .world-canvas {
+    left: 50%;
+    right: auto;
+    width: calc(62dvh * 1920 / 1146);
+    margin-left: calc(62dvh * -960 / 1146);
+  }
+  .world-pin-shield { width: 40px; height: 46px; padding: 5px 4px 9px; }
+  .world-pin-name   { font-size: 8.5px; letter-spacing: 0.14em; padding: 2px 5px; }
+  .world-hint       { display: block; font-size: 8.5px; letter-spacing: 0.16em; bottom: 12px; left: 12px; }
 }

@@ -46,6 +46,8 @@ body {
   top: 0;
   width: 100%;
   height: 100vh;
+  /* The mobile URL bar grows and shrinks; dvh follows it, vh does not. */
+  height: 100dvh;
   overflow: hidden;
   background: #000;
 }
@@ -515,4 +517,11 @@ body {
   opacity: 0;
   will-change: opacity;
   transform: translateZ(0);
+}
+
+/* On a portrait phone the title card must be shown whole — cover crops it to
+   a few letters. The footage keeps cover: its subject is centred, so the crop
+   only takes empty edges. */
+@media (max-width: 900px) and (orientation: portrait) {
+  .got-title-video { object-fit: contain; }
 }

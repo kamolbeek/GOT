@@ -14,7 +14,6 @@ const SIGILS = import.meta.glob('../assets/sigils/*.png', {
 })
 const sigilFor = (house) => SIGILS[`../assets/sigils/${house}.png`] ?? null
 
-const MIN_K = 1
 const MAX_K = 6
 
 const clamp = (v, lo, hi) => (v < lo ? lo : v > hi ? hi : v)
@@ -31,29 +30,44 @@ const World = () => {
   // page scrolls straight past it instead of being caught.
   const [engaged, setEngaged] = useState(false)
   const frameRef = useRef(null)
+  const canvasRef = useRef(null)
   const drag = useRef(null)
 
   // Panning is limited to what the zoom actually reveals, so the map cannot be
   // dragged off its own frame.
   const clampPan = useCallback((k, x, y) => {
     const el = frameRef.current
-    const w = el?.clientWidth ?? 0
-    const h = el?.clientHeight ?? 0
-    const mx = (k - 1) * w / 2
-    const my = (k - 1) * h / 2
+    const cv = canvasRef.current
+    const fw = el?.clientWidth ?? 0
+    const fh = el?.clientHeight ?? 0
+    // The map layer is not always the size of its frame — on a narrow screen
+    // the frame is taller than the map is wide, so the layer overhangs and has
+    // to be pannable at rest. Bounds come from the layer, not the frame.
+    const mx = Math.max(0, ((cv?.offsetWidth ?? fw) * k - fw) / 2)
+    const my = Math.max(0, ((cv?.offsetHeight ?? fh) * k - fh) / 2)
     return { x: clamp(x, -mx, mx), y: clamp(y, -my, my) }
+  }, [])
+
+  // On a narrow screen the map layer overhangs its frame, so zooming out past
+  // 1 is what shows the whole of Westeros at once. On a wide one the two are
+  // the same size and this is simply 1.
+  const minZoom = useCallback(() => {
+    const el = frameRef.current
+    const cv = canvasRef.current
+    if (!el || !cv?.offsetWidth) return 1
+    return Math.min(1, el.clientWidth / cv.offsetWidth)
   }, [])
 
   const zoomBy = useCallback((factor, ox, oy) => {
     setView(v => {
-      const k = clamp(v.k * factor, MIN_K, MAX_K)
+      const k = clamp(v.k * factor, minZoom(), MAX_K)
       const r = k / v.k
       // keep the point under the cursor fixed while the scale changes
       const nx = ox - (ox - v.x) * r
       const ny = oy - (oy - v.y) * r
       return { k, ...clampPan(k, nx, ny) }
     })
-  }, [clampPan])
+  }, [clampPan, minZoom])
 
   // Wheel needs a non-passive listener for preventDefault to take effect.
   // Unengaged it does nothing at all, so the wheel keeps scrolling the page.
@@ -147,6 +161,7 @@ const World = () => {
         {/* Everything that pans and zooms sits in one layer, so the crests stay
             pinned to their place on the map. */}
         <div
+          ref={canvasRef}
           className="world-canvas"
           style={{ transform: `translate(${x}px, ${y}px) scale(${k})` }}
         >
@@ -160,7 +175,7 @@ const World = () => {
               <button
                 key={r.id}
                 type="button"
-                className={`world-pin ${on ? 'on' : ''}`}
+                className={`world-pin ${on ? 'on' : ''} ${k < 0.85 ? 'far' : ''}`}
                 style={{
                   left: `${r.at.x}%`,
                   top: `${r.at.y}%`,

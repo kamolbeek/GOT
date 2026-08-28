@@ -5,6 +5,7 @@
   position: relative;
   width: 100%;
   min-height: 100vh;
+  min-height: 100dvh;
   background: #050403;
   padding: 100px 60px 120px;
   overflow: hidden;
