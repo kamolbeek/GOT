@@ -138,6 +138,7 @@ export const translations = {
       by: 'Sayt muallifi',
       name: 'Kamoliddin',
       email: 'kamaliddinashurov@gmail.com',
+      second: 'Abdulloh',
     },
     section1: {
       eyebrow: 'VESTEROSNING BUYUK XONADONLARI',
@@ -262,6 +263,7 @@ export const translations = {
       by: 'Автор сайта',
       name: 'Kamoliddin',
       email: 'kamaliddinashurov@gmail.com',
+      second: 'Abdulloh',
     },
     section1: {
       eyebrow: 'ВЕЛИКИЕ ДОМА ВЕСТЕРОСА',
@@ -386,6 +388,7 @@ export const translations = {
       by: 'By',
       name: 'Kamoliddin',
       email: 'kamaliddinashurov@gmail.com',
+      second: 'Abdulloh',
     },
     section1: {
       eyebrow: 'THE GREAT HOUSES OF WESTEROS',

@@ -21,6 +21,17 @@
 
 .credit-by { color: #5a5348; }
 
+.credit-authors {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+/* Both names carry equal weight; only the underline marks which one opens a
+   mailbox. */
+.credit-second { color: #8d7c52; }
+.credit-amp    { color: #5a5348; }
+
 .credit-name {
   color: #8d7c52;
   text-decoration: none;
