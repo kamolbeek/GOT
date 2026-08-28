@@ -27,6 +27,9 @@ const World = () => {
   const [view, setView] = useState({ k: 1, x: 0, y: 0 })
   const [active, setActive] = useState(null)
   const [dragging, setDragging] = useState(false)
+  // The map only takes the wheel once it has been clicked. Until then the
+  // page scrolls straight past it instead of being caught.
+  const [engaged, setEngaged] = useState(false)
   const frameRef = useRef(null)
   const drag = useRef(null)
 
@@ -52,10 +55,11 @@ const World = () => {
     })
   }, [clampPan])
 
-  // Wheel needs a non-passive listener for preventDefault to take effect
+  // Wheel needs a non-passive listener for preventDefault to take effect.
+  // Unengaged it does nothing at all, so the wheel keeps scrolling the page.
   useEffect(() => {
     const el = frameRef.current
-    if (!el) return
+    if (!el || !engaged) return
     const onWheel = (e) => {
       e.preventDefault()
       const r = el.getBoundingClientRect()
@@ -65,13 +69,35 @@ const World = () => {
     }
     el.addEventListener('wheel', onWheel, { passive: false })
     return () => el.removeEventListener('wheel', onWheel)
-  }, [zoomBy])
+  }, [zoomBy, engaged])
+
+  // Control is handed back by Esc, by a press anywhere else on the page, or
+  // by scrolling the map out of sight - so it can never be left holding on.
+  useEffect(() => {
+    if (!engaged) return
+    const el = frameRef.current
+    const onKey = (e) => { if (e.key === 'Escape') setEngaged(false) }
+    const onOutside = (e) => { if (!el?.contains(e.target)) setEngaged(false) }
+    const io = new IntersectionObserver(
+      ([entry]) => { if (!entry.isIntersecting) setEngaged(false) },
+      { threshold: 0.15 },
+    )
+    if (el) io.observe(el)
+    window.addEventListener('keydown', onKey)
+    window.addEventListener('pointerdown', onOutside, true)
+    return () => {
+      io.disconnect()
+      window.removeEventListener('keydown', onKey)
+      window.removeEventListener('pointerdown', onOutside, true)
+    }
+  }, [engaged])
 
   const onPointerDown = (e) => {
     // The frame captures the pointer to keep a drag alive outside its bounds,
     // which also swallows clicks on the controls sitting over it — so a press
     // that starts on one is left alone.
     if (e.target.closest('.world-zoom, .world-info, .world-pin')) return
+    setEngaged(true)
     drag.current = { px: e.clientX, py: e.clientY, ...view }
     setDragging(true)
     e.currentTarget.setPointerCapture?.(e.pointerId)
@@ -89,7 +115,7 @@ const World = () => {
   const endDrag = () => { drag.current = null; setDragging(false) }
 
   const step = (f) => zoomBy(f, 0, 0)
-  const reset = () => { setView({ k: 1, x: 0, y: 0 }); setActive(null) }
+  const reset = () => { setView({ k: 1, x: 0, y: 0 }); setActive(null); setEngaged(false) }
 
   const { k, x, y } = view
   const sel = active ? MAP_REGIONS.find(r => r.id === active) : null
@@ -111,7 +137,7 @@ const World = () => {
 
       <div
         ref={frameRef}
-        className={`world-frame ${dragging ? 'dragging' : ''}`}
+        className={`world-frame ${engaged ? 'engaged' : ''} ${dragging ? 'dragging' : ''}`}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={endDrag}
@@ -166,7 +192,9 @@ const World = () => {
           <button type="button" className="world-zoom-reset" onClick={reset}>⟲</button>
         </div>
         <p className="world-scale">×{k.toFixed(1)}</p>
-        {!active && <p className="world-hint">{s.hint}</p>}
+        {!active && (
+          <p className="world-hint">{engaged ? s.unlockHint : s.lockHint}</p>
+        )}
 
         {sel && (
           <div className="world-info" style={{ '--accent': selHouse ? selHouse.accent : '#8a6a3c' }}>
